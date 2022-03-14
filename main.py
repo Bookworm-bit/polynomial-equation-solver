@@ -31,18 +31,21 @@ def listMake(listy):
 og = input("Enter your polynomial equation: ")
 listy = og.split(' ')
 
-def divis(diction):
+def factorFind(diction):
+    constantFac = 0
+    leadcoeffFac = 0
     coeff = []
     for i in range(len(listy) - listy.count("+") - listy.count("-") + 1):
         if i % 2 == 0:
             coeff.append(diction[str(i) + 'coefficient'])
     for value in diction.values():
         if 'C:' in value:
-            for x in range(1, (int(value.removeprefix("C: "))) + 1):
+            for x in range(0 - int(value.removeprefix("C: ")), (int(value.removeprefix("C: "))) + 1):
                 if int(value.removeprefix("C: ")) % x == 0:
-                    print(eval(og.replace('x', str(x))))
-                    # if eval(og.replace('x', str(x))) == 0:
-                    #     return x 
+                    constantFac = x
+    for i in range(0 - int(diction.get('0coefficent')), int(diction.get('0coefficient') + 1)):
+        print("hate you dad")
+        
 
 print("Welcome to Polynomial Equation Solver by:")
 print("""▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
@@ -52,4 +55,4 @@ print("""▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄�
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 """)
 print(listMake(listy))
-print(divis(diction))
+print(factorFind(diction))
