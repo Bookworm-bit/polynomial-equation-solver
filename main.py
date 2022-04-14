@@ -1,10 +1,10 @@
 import math
 import cmath
 
-operator = ['+', '-']
-diction = {}
+operator = ['+', '-'] # accepted operators
+diction = {} # dictionary of the elements of the equation
 
-def listMake(listy):
+def listMake(listy): # turn the elements of the equation into a dictionary
     for item in listy:
         if item[0] == 'x':
             diction[str(listy.index(item)) + 'coefficient'] = "1"
@@ -55,7 +55,8 @@ def factorFind(diction):
     print(constantFac)
 
 print("Welcome to Polynomial Equation Solver by:")
-print("""▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+print("""
+▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
 ██░▄▄▀█▀▄▄▀█▀▄▄▀█░█▀█░███░█▀▄▄▀█░▄▄▀█░▄▀▄░████░▄▄▀██▄██▄░▄██
 ██░▄▄▀█░██░█░██░█░▄▀█▄▀░▀▄█░██░█░▀▀▄█░█▄█░█▄▄█░▄▄▀██░▄██░███
 ██░▀▀░██▄▄███▄▄██▄█▄██▄█▄███▄▄██▄█▄▄█▄███▄████▄▄▄▄█▄▄▄██▄███
