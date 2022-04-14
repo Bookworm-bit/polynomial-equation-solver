@@ -51,8 +51,6 @@ def factorFind(diction):
         constantFac.remove(None)
     except ValueError:
         pass
-    print(leadcoeffFac)
-    print(constantFac)
 
 print("Welcome to Polynomial Equation Solver by:")
 print("""
