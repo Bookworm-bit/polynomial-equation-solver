@@ -32,8 +32,8 @@ og = input("Enter your polynomial equation: ")
 listy = og.split(' ')
 
 def factorFind(diction):
-    constantFac = 0
-    leadcoeffFac = 0
+    constantFac = []
+    leadcoeffFac = []
     coeff = []
     for i in range(len(listy) - listy.count("+") - listy.count("-") + 1):
         if i % 2 == 0:
@@ -41,11 +41,18 @@ def factorFind(diction):
     for value in diction.values():
         if 'C:' in value:
             for x in range(0 - int(value.removeprefix("C: ")), (int(value.removeprefix("C: "))) + 1):
-                if int(value.removeprefix("C: ")) % x == 0:
-                    constantFac = x
-    for i in range(0 - int(diction.get('0coefficent')), int(diction.get('0coefficient') + 1)):
-        print("hate you dad")
-        
+                if x != 0:
+                    if int(value.removeprefix("C: ")) % x == 0:
+                        constantFac.append(x)
+    for i in range(0 - int(diction.get('0coefficient')), int(diction.get('0coefficient')) + 1):
+        leadcoeffFac.append(i)
+    try:
+        leadcoeffFac.remove(None)
+        constantFac.remove(None)
+    except ValueError:
+        pass
+    print(leadcoeffFac)
+    print(constantFac)
 
 print("Welcome to Polynomial Equation Solver by:")
 print("""▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
