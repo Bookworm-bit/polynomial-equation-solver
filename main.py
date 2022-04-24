@@ -2,36 +2,36 @@ import math
 import cmath
 
 operator = ['+', '-'] # accepted operators
-diction = {} # dictionary of the elements of the equation
+coefficients = []
+operators = []
+powers = []
+const = 0
 
-def listMake(listy): # turn the elements of the equation into a dictionary
+def listMake(listy):
     for item in listy:
         if item[0] == 'x':
-            diction[str(listy.index(item)) + 'coefficient'] = "1"
+            coefficients.append(1)
         if item[0] != 'x' and item not in operator:
             partit = item.partition("x")
-            diction[str(listy.index(item)) + 'coefficient'] = str(partit[0])
+            coefficients.append(int(partit[0]))
         if "x" not in item and item not in operator:
-            diction[str(listy.index(item)) + 'coefficient'] = f'C: {item}'
+            const += int(item)
         if item in operator:
-            diction[str(listy.index(item)) + 'operator'] = item
+            operators.append(int(item))
         if item not in operator:
-            if diction[str(listy.index(item)) + 'coefficient'] != "1":
-                if "^" in item:
-                    diction[str(listy.index(item)) + 'power'] = item.removeprefix(str(diction[str(listy.index(item)) + 'coefficient']) + 'x^')
-            if diction[str(listy.index(item)) + 'coefficient'] == "1":
-                if "^" in item:
-                    diction[str(listy.index(item)) + 'power'] = item.removeprefix('x^')
+            powers.append(int(item.partition("x^")[1]))
             if "x" in item and "^" not in item:
-                diction[str(listy.index(item)) + 'power'] = "1"
+                powers.append(1)
             if "x" not in item and "^" not in item:
-                diction[str(listy.index(item)) + 'power'] = "0"
-    return diction
+                powers.append(0)
+    return coefficients, operators, powers, const
 
 og = input("Enter your polynomial equation: ")
 listy = og.split(' ')
 
 def factorFind(diction):
+    global constantFac
+    global leadcoeffFac
     constantFac = []
     leadcoeffFac = []
     coeff = []
@@ -51,6 +51,38 @@ def factorFind(diction):
         constantFac.remove(None)
     except ValueError:
         pass
+    # try:
+    #     if int(diction['0coefficient']) > 0:
+    #         for item in leadcoeffFac:
+    #             if int(item) < 0:
+    #                 leadcoeffFac.remove(item)
+    #     for item in diction.keys():
+    #         if int(item) < 0 and 'C:' in item:
+    #             for item in constantFac:
+    #                 if int(item) > 0:
+    #                     constantFac.remove(item)
+    # except ValueError:
+    #     pass
+    return leadcoeffFac, constantFac
+
+def combine(leadcoeffFac, constantFac):
+    global comb
+    comb = [f'{x}/{y}' for x in leadcoeffFac for y in constantFac]
+    return comb
+
+def recip(leadcoeffFac, constantFac):
+    global recip
+    recip = [f'{y}/{x}' for y in constantFac for x in leadcoeffFac]
+    return recip
+
+poss = comb + recip
+
+def test(poss):
+
+
+# def synthetic()
+
+
 
 print("Welcome to Polynomial Equation Solver by:")
 print("""
@@ -61,4 +93,6 @@ print("""
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 """)
 print(listMake(listy))
-print(factorFind(diction))
+print(factorFind(coefficients))
+print(combine(leadcoeffFac, constantFac))
+print(recip(leadcoeffFac, constantFac))
