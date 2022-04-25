@@ -29,7 +29,7 @@ def listMake(listy):
 og = input("Enter your polynomial equation: ")
 listy = og.split(' ')
 
-def factorFind(diction):
+def factorFind(coefficients, powers):
     global constantFac
     global leadcoeffFac
     constantFac = []
@@ -37,14 +37,12 @@ def factorFind(diction):
     coeff = []
     for i in range(len(listy) - listy.count("+") - listy.count("-") + 1):
         if i % 2 == 0:
-            coeff.append(diction[str(i) + 'coefficient'])
-    for value in diction.values():
-        if 'C:' in value:
-            for x in range(0 - int(value.removeprefix("C: ")), (int(value.removeprefix("C: "))) + 1):
-                if x != 0:
-                    if int(value.removeprefix("C: ")) % x == 0:
-                        constantFac.append(x)
-    for i in range(0 - int(diction.get('0coefficient')), int(diction.get('0coefficient')) + 1):
+            coeff.append(i)
+        for x in range(0 - coefficients[-1], coefficients[-1] + 1):
+            if x != 0:
+                if coefficients[-1] % x == 0:
+                    constantFac.append(x)
+    for i in range(0 - coefficients[0], coefficients[0] + 1):
         leadcoeffFac.append(i)
     try:
         leadcoeffFac.remove(None)
@@ -77,7 +75,7 @@ def recip(leadcoeffFac, constantFac):
 
 poss = comb + recip
 
-def test(poss):
+#def test(poss):
 
 
 # def synthetic()
