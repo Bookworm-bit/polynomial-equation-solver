@@ -22,13 +22,13 @@ def parse(list_input):
             polynomial_coefficients.append(int(partit[0]))
 
         if "x" not in item and item not in operator_list:
-            polynomial_constant+= int(item)
+            global POLYNOMIAL_CONSTANT
+            POLYNOMIAL_CONSTANT += int(item)
 
         if item in operator_list:
-            polynomial_operators.append(int(item))
+            polynomial_operators.append(item)
 
         if item not in operator_list:
-            print(item.partition("x^"))
             polynomial_exponents.append(int(item.partition("x^")[len(item) - 1]))
             if "x" in item and "^" not in item:
                 polynomial_exponents.append(1)
@@ -39,14 +39,13 @@ def parse(list_input):
         if len(polynomial_coefficients) - len(polynomial_operators) == 2:
             polynomial_operators.insert(0, '+')
 
-    return polynomial_coefficients, polynomial_operators, polynomial_exponents, const
-
+    return polynomial_coefficients, polynomial_operators, polynomial_exponents, POLYNOMIAL_CONSTANT
 
 og = input("Enter your polynomial equation: ")
 list_input = og.split(' ')
 
 
-def factoring(polynomial_coefficients, polynomial_exponents):
+def factoring(polynomial_coefficients):
     global polynomial_constant_factors
     global leading_coefficient_factors
     polynomial_constant_factors = []
