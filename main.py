@@ -75,6 +75,7 @@ def factoring(polynomial_coefficients, polynomial_exponents):
     #         for item in leading_coefficient_factors:
     #             if int(item) < 0:
     #                 leading_coefficient_factors.remove(item)
+
     #     for item in diction.keys():
     #         if int(item) < 0 and 'C:' in item:
     #             for item in polynomial_constant_factors:
@@ -86,13 +87,13 @@ def factoring(polynomial_coefficients, polynomial_exponents):
     return leading_coefficient_factors, polynomial_constant_factors
 
 
-def unfllippedroots(leading_coefficient_factors, polynomial_constant_factors):
+def unfllipped_roots(leading_coefficient_factors, polynomial_constant_factors):
     global unfllipped_possible_roots
     unfllipped_possible_roots = [f'{x}/{y}' for x in leading_coefficient_factors for y in polynomial_constant_factors]
     return unfllipped_possible_roots
 
 
-def reciprocalroots(leading_coefficient_factors, polynomial_constant_factors):
+def reciprocal_roots(leading_coefficient_factors, polynomial_constant_factors):
     global possible_roots_reciprocal
     possible_roots_reciprocal = [f'{y}/{x}' for y in polynomial_constant_factors for x in leading_coefficient_factors]
     return possible_roots_reciprocal
@@ -101,10 +102,10 @@ def reciprocalroots(leading_coefficient_factors, polynomial_constant_factors):
 possible_polynomial_roots = unfllipped_possible_roots + possible_roots_reciprocal
 
 
-# def plugin(poss):
+# def plugin(possible_polynomial_roots):
 
 
-# def syntheticdivision()
+# def syntheticdivision():
 
 
 print("Welcome to Polynomial Equation Solver by:")
@@ -117,5 +118,5 @@ print("""
 """)
 print(parse(list_input))
 print(factoring(polynomial_coefficients))
-print(unfllippedroots(leading_coefficient_factors, polynomial_constant_factors))
-print(reciprocalroots(leading_coefficient_factors, polynomial_constant_factors))
+print(unfllipped_roots(leading_coefficient_factors, polynomial_constant_factors))
+print(reciprocal_roots(leading_coefficient_factors, polynomial_constant_factors))
