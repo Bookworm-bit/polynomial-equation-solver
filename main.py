@@ -12,8 +12,8 @@ unfllipped_possible_roots = []
 polynomial_constant= 0
 
 
-def parse(listy):
-    for item in listy:
+def parse(list_input):
+    for item in list_input:
         if item[0] == 'x':
             polynomial_coefficients.append(1)
 
@@ -42,7 +42,7 @@ def parse(listy):
 
 
 og = input("Enter your polynomial equation: ")
-listy = og.split(' ')
+list_input = og.split(' ')
 
 
 def factoring(polynomial_coefficients, polynomial_exponents):
@@ -52,7 +52,7 @@ def factoring(polynomial_coefficients, polynomial_exponents):
     leading_coefficient_factors = []
     coeff = []
 
-    for i in range(len(listy) - listy.count("+") - listy.count("-") + 1):
+    for i in range(len(list_input) - list_input.count("+") - list_input.count("-") + 1):
         if i % 2 == 0:
             coeff.append(i)
 
@@ -115,7 +115,7 @@ print("""
 ██░▀▀░██▄▄███▄▄██▄█▄██▄█▄███▄▄██▄█▄▄█▄███▄████▄▄▄▄█▄▄▄██▄███
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 """)
-print(parse(listy))
+print(parse(list_input))
 print(factoring(polynomial_coefficients))
 print(unfllippedroots(leading_coefficient_factors, polynomial_constant_factors))
 print(reciprocalroots(leading_coefficient_factors, polynomial_constant_factors))
