@@ -9,7 +9,7 @@ polynomial_operators = []
 polynomial_exponents = []
 possible_roots_reciprocal = []
 unfllipped_possible_roots = []
-polynomial_constant= 0
+POLYNOMIAL_CONSTANT = 0
 
 
 def parse(list_input):
@@ -28,14 +28,15 @@ def parse(list_input):
             polynomial_operators.append(int(item))
 
         if item not in operator_list:
-            polynomial_exponents.append(int(item.partition("x^")[1]))
+            print(item.partition("x^"))
+            polynomial_exponents.append(int(item.partition("x^")[len(item) - 1]))
             if "x" in item and "^" not in item:
                 polynomial_exponents.append(1)
 
             if "x" not in item and "^" not in item:
                 polynomial_exponents.append(0)
         
-        if len(coeff) - len(polynomial_operators) == 2:
+        if len(polynomial_coefficients) - len(polynomial_operators) == 2:
             polynomial_operators.insert(0, '+')
 
     return polynomial_coefficients, polynomial_operators, polynomial_exponents, const
@@ -50,11 +51,10 @@ def factoring(polynomial_coefficients, polynomial_exponents):
     global leading_coefficient_factors
     polynomial_constant_factors = []
     leading_coefficient_factors = []
-    coeff = []
 
     for i in range(len(list_input) - list_input.count("+") - list_input.count("-") + 1):
         if i % 2 == 0:
-            coeff.append(i)
+            polynomial_coefficients.append(i)
 
         for x in range(0 - polynomial_coefficients[-1], polynomial_coefficients[-1] + 1):
             if x != 0:
