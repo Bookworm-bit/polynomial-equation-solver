@@ -98,9 +98,6 @@ def reciprocal_roots(leading_coefficient_factors, polynomial_constant_factors):
     return possible_roots_reciprocal
 
 
-possible_polynomial_roots = unfllipped_possible_roots + possible_roots_reciprocal
-
-
 # def plugin(possible_polynomial_roots):
 
 
@@ -115,7 +112,7 @@ print("""
 ██░▀▀░██▄▄███▄▄██▄█▄██▄█▄███▄▄██▄█▄▄█▄███▄████▄▄▄▄█▄▄▄██▄███
 ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
 """)
+
 print(parse(list_input))
 print(factoring(polynomial_coefficients))
-print(unfllipped_roots(leading_coefficient_factors, polynomial_constant_factors))
-print(reciprocal_roots(leading_coefficient_factors, polynomial_constant_factors))
+possible_polynomial_roots = unfllipped_roots(leading_coefficient_factors, polynomial_constant_factors) + reciprocal_roots(leading_coefficient_factors, polynomial_constant_factors)
