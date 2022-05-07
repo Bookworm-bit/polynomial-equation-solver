@@ -60,10 +60,10 @@ def factoring(polynomial_coefficients):
         if i % 2 == 0:
             polynomial_coefficients.append(i)
 
-        for x in range(0 - polynomial_coefficients[-1], polynomial_coefficients[-1] + 1):
-            if x != 0:
-                if polynomial_coefficients[-1] % x == 0:
-                    polynomial_constant_factors.append(x)
+    for x in range(0 - POLYNOMIAL_CONSTANT, POLYNOMIAL_CONSTANT + 1):
+        if x != 0:
+            if int(POLYNOMIAL_CONSTANT) % x == 0:
+                polynomial_constant_factors.append(x)
 
     for i in range(0 - polynomial_coefficients[0], polynomial_coefficients[0] + 1):
         leading_coefficient_factors.append(i)
