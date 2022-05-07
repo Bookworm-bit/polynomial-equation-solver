@@ -8,8 +8,12 @@ leading_coefficient_factors = []
 polynomial_operators = []
 polynomial_exponents = []
 possible_roots_reciprocal = []
-unfllipped_possible_roots = []
+unflipped_possible_roots = []
+possible_polynomial_roots = []
 POLYNOMIAL_CONSTANT = 0
+PLUG_IN_LIST = []
+roots = []
+zeroes = []
 
 
 def parse(list_input):
@@ -29,7 +33,8 @@ def parse(list_input):
             polynomial_operators.append(item)
 
         if item not in operator_list:
-            polynomial_exponents.append(int(item.partition("x^")[len(item) - 1]))
+            if "^" in item and "x" in item:
+                polynomial_exponents.append(int(item.partition("x^")[len(item) - 1]))
             if "x" in item and "^" not in item:
                 polynomial_exponents.append(1)
 
@@ -86,22 +91,62 @@ def factoring(polynomial_coefficients):
     return leading_coefficient_factors, polynomial_constant_factors
 
 
-def unfllipped_roots(leading_coefficient_factors, polynomial_constant_factors):
-    global unfllipped_possible_roots
-    unfllipped_possible_roots = [f'{x}/{y}' for x in leading_coefficient_factors for y in polynomial_constant_factors]
-    return unfllipped_possible_roots
+def unflipped_roots(leading_coefficient_factors, polynomial_constant_factors):
+    global unflipped_possible_roots
+    unflipped_possible_roots = [f'{x}/{y}' for x in leading_coefficient_factors for y in polynomial_constant_factors]
+    for item in unflipped_possible_roots:
+        if '/0' in item:
+            unflipped_possible_roots.remove(item)
+
+    return unflipped_possible_roots
 
 
 def reciprocal_roots(leading_coefficient_factors, polynomial_constant_factors):
     global possible_roots_reciprocal
     possible_roots_reciprocal = [f'{y}/{x}' for y in polynomial_constant_factors for x in leading_coefficient_factors]
+    for item in possible_roots_reciprocal:
+        if '/0' in item:
+            possible_roots_reciprocal.remove(item)
+
     return possible_roots_reciprocal
 
 
-# def plugin(possible_polynomial_roots):
+def plug_in_setup(list_input):
+    global PLUG_IN_LIST
+    PLUG_IN_LIST = []
+
+    for item in list_input:
+        if '^' in item and 'x' in item:
+            if item[0] == 'x':
+                PLUG_IN_LIST.append(item.replace('x^', '1 * (x) ** '))
+            if item[0] != 'x':
+                PLUG_IN_LIST.append(item.replace('x', '* (x) ** '))
+        
+        if 'x' not in item and '^' not in item:
+            PLUG_IN_LIST.append(item)
+    
+    return(PLUG_IN_LIST)
+    
+
+def plug_in(possible_polynomial_roots): 
+    global zeroes
+    global PLUG_IN_LIST
+
+    for item in possible_polynomial_roots:
+        if eval(''.join(PLUG_IN_LIST).replace('x', item)) == 0:
+            zeroes.append(eval(item))
+
+    return(zeroes)
 
 
-# def syntheticdivision():
+def zero_cleaner(zeroes):
+    global roots
+    for item in zeroes:
+        if item not in roots:
+            roots.append(item)
+
+
+# def synthetic_division():
 
 
 print("Welcome to Polynomial Equation Solver by:")
@@ -114,5 +159,21 @@ print("""
 """)
 
 print(parse(list_input))
+
 print(factoring(polynomial_coefficients))
-possible_polynomial_roots = unfllipped_roots(leading_coefficient_factors, polynomial_constant_factors) + reciprocal_roots(leading_coefficient_factors, polynomial_constant_factors)
+
+print(plug_in_setup(list_input))
+
+possible_polynomial_roots = unflipped_roots(
+    leading_coefficient_factors, 
+    polynomial_constant_factors) + reciprocal_roots(
+    leading_coefficient_factors, 
+    polynomial_constant_factors)
+
+print(possible_polynomial_roots)
+
+plug_in(possible_polynomial_roots)
+
+zero_cleaner(zeroes)
+
+print(roots)
