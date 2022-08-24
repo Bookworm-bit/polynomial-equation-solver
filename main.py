@@ -1,192 +1,105 @@
-import math
-import cmath
+from Term import Term
 
-operator_list = ['+', '-']
-polynomial_coefficients = []
-polynomial_constant_factors = []
-leading_coefficient_factors = []
-polynomial_operators = []
-polynomial_exponents = []
-possible_roots_reciprocal = []
-unflipped_possible_roots = []
-possible_polynomial_roots = []
-POLYNOMIAL_CONSTANT = 0
-PLUG_IN_LIST = []
-roots = []
-zeroes = []
+# import math
+import re
+# import colorama
 
 
-def parse(list_input):
-    for item in list_input:
-        if item[0] == 'x':
-            polynomial_coefficients.append(1)
-
-        if item[0] == 'x' and list_input.index(item) == 0:
-            polynomial_operators.append("+")
-
-        if item[0] != 'x' and item not in operator_list:
-            partit = item.partition("x")
-            polynomial_coefficients.append(int(partit[0]))
-
-        if "x" not in item and item not in operator_list:
-            global POLYNOMIAL_CONSTANT
-            POLYNOMIAL_CONSTANT += int(item)
-
-        if item in operator_list:
-            polynomial_operators.append(item)
-
-        if item not in operator_list:
-            if "^" in item and "x" in item:
-                polynomial_exponents.append(
-                    int(item.partition("x^")[len(item) - 1]))
-            if "x" in item and "^" not in item:
-                polynomial_exponents.append(1)
-
-            if "x" not in item and "^" not in item:
-                polynomial_exponents.append(0)
-
-        if len(polynomial_coefficients) - len(polynomial_operators) == 2:
-            polynomial_operators.insert(0, '+')
-
-    return polynomial_coefficients, polynomial_operators, polynomial_exponents, POLYNOMIAL_CONSTANT
+def combine_like_terms(polynomial):
+    for (t1, idx) in enumerate(polynomial):
+        if isinstance(t1, Term):
+            for (t2, jdx) in enumerate(polynomial):
+                if isinstance(t2, Term):
+                    if t2.exp == t1.exp:
+                        polynomial[idx] = t1 + t2
+                        polynomial.pop(jdx)
+                        continue
+    return polynomial
 
 
-og = input("Enter your polynomial equation: ")
-list_input = og.split(' ')
+def get_factors(number):
+    factors = []
+    for i in range(1, int(number ** 0.5) + 1):
+        if number % i == 0:
+            factors.append(i)
+            factors.append(-1 * i)
+            factors.append(number // i)
+            factors.append(-1 * (number // i))
+    return factors
 
 
-def factoring(polynomial_coefficients, polynomial_constant_factors, leading_coefficient_factors):
-    for i in range(len(list_input) - list_input.count("+") - list_input.count("-") + 1):
-        if i % 2 == 0:
-            polynomial_coefficients.append(i)
-
-    for x in range(0 - POLYNOMIAL_CONSTANT, POLYNOMIAL_CONSTANT + 1):
-        if x != 0:
-            if int(POLYNOMIAL_CONSTANT) % x == 0:
-                polynomial_constant_factors.append(x)
-
-    for i in range(0 - polynomial_coefficients[0], polynomial_coefficients[0] + 1):
-        leading_coefficient_factors.append(i)
-
-    try:
-        leading_coefficient_factors.remove(None)
-        polynomial_constant_factors.remove(None)
-    except ValueError:
-        pass
-
-    # try:
-    #     if int(diction['0coefficient']) > 0:
-    #         for item in leading_coefficient_factors:
-    #             if int(item) < 0:
-    #                 leading_coefficient_factors.remove(item)
-
-    #     for item in diction.keys():
-    #         if int(item) < 0 and 'C:' in item:
-    #             for item in polynomial_constant_factors:
-    #                 if int(item) > 0:
-    #                     polynomial_constant_factors.remove(item)
-    # except ValueError:
-    #     pass
-
-    return leading_coefficient_factors, polynomial_constant_factors
+def get_possible_roots(leading_coeff_factors, constant_term_factors):
+    return [t3 / t4 for (t3, t4) in zip(constant_term_factors, leading_coeff_factors)]
 
 
-def unflipped_roots(leading_coefficient_factors, polynomial_constant_factors, unflipped_possible_roots):
-    unflipped_possible_roots = [f'{x}/{y}' for x in leading_coefficient_factors for y in polynomial_constant_factors]
-    for item in unflipped_possible_roots:
-        if '/0' in item:
-            unflipped_possible_roots.remove(item)
-
-    return unflipped_possible_roots
-
-
-def reciprocal_roots(leading_coefficient_factors, polynomial_constant_factors, possible_roots_reciprocal):
-    possible_roots_reciprocal = [f'{y}/{x}' for y in polynomial_constant_factors for x in leading_coefficient_factors]
-    for item in possible_roots_reciprocal:
-        if '/0' in item:
-            possible_roots_reciprocal.remove(item)
-
-    return possible_roots_reciprocal
+def test_possible_roots(possible_roots, polynomial):
+    working_roots = []
+    for r in possible_roots:
+        term_values = 0
+        for t in polynomial.pop():
+            term_values += t.plugin(r)
+        if term_values + polynomial[-1] == 0:
+            working_roots.append(r)
+    return working_roots
 
 
-def plug_in_setup(list_input, PLUG_IN_LIST):
-    for item in list_input:
-        if '^' in item and 'x' in item:
-            if item[0] == 'x':
-                PLUG_IN_LIST.append(item.replace('x^', '1 * (x) ** '))
-            if item[0] != 'x':
-                PLUG_IN_LIST.append(item.replace('x', '* (x) ** '))
+def main():
+    print("Welcome to Polynomial Equation Solver by:")
+    print("""
+    ▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
+    ██░▄▄▀█▀▄▄▀█▀▄▄▀█░█▀█░███░█▀▄▄▀█░▄▄▀█░▄▀▄░████░▄▄▀██▄██▄░▄██
+    ██░▄▄▀█░██░█░██░█░▄▀█▄▀░▀▄█░██░█░▀▀▄█░█▄█░█▄▄█░▄▄▀██░███░███
+    ██░▀▀░██▄▄███▄▄██▄█▄██▄█▄███▄▄██▄█▄▄█▄███▄████▄▄▄██▄▄▄██▄███
+    ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
+    """)
 
-        if 'x' not in item and '^' not in item:
-            PLUG_IN_LIST.append(item)
-    
-    return PLUG_IN_LIST
+    while True:
+        print("Type 'exit' to exit.")
+        polynomial = input("Enter a polynomial: ").strip().split(" ")
+
+        if polynomial == ['exit']:
+            print("Goodbye!")
+            break
+        if re.match(r'^-[0-9]+', polynomial[0]):
+            print("You entered a number")
+            print("This program will not work with single numbers")
+            print("Please enter a polynomial with a degree greater than 0.")
+            continue
+
+        for (t, idx) in enumerate(polynomial):
+            EXP = 0
+            COEFF = 0
+
+            if 'x' in str(t):
+                if '^' not in str(t):
+                    polynomial[idx] = str(t) + '^1'
+                    COEFF = int(t.removesuffix('x'))
+                    EXP = 1
+                else:
+                    COEFF = int(t.removesuffix('x'))
+                    EXP = int(t.removeprefix('^'))
+
+                polynomial[idx] = Term(COEFF, EXP)
+            else:
+                polynomial[idx] = int(t)
+
+        if 'x' in polynomial[-1]:
+            polynomial.append(0)
+
+        polynomial = combine_like_terms(polynomial)
+        leading_coeff = polynomial[0].coeff
+        constant_term = polynomial[-1]
+
+        leading_coeff_factors = get_factors(leading_coeff)
+        constant_term_factors = get_factors(constant_term)
+
+        possible_roots = get_possible_roots(leading_coeff_factors, constant_term_factors)
+
+        roots = test_possible_roots(possible_roots, polynomial)
+
+        print(roots)
 
 
-def plug_in(possible_polynomial_roots, zeroes, PLUG_IN_LIST): 
-    for item in possible_polynomial_roots:
-        if eval(''.join(PLUG_IN_LIST).replace('x', item)) == 0:
-            zeroes.append(eval(item))
 
-    return(zeroes)
-
-
-def zero_cleaner(zeroes, roots):
-    for item in zeroes:
-        if item not in roots:
-            roots.append(item)
-
-
-# def synthetic_division(roots, polynomial_coefficients, polynomial_operators, polynomial_exponents):
-#     denominator = roots[0]
-#     numerator = []
-#     i = 1
-#     start = polynomial_coefficients[0]
-#     number = polynomial_coefficients[i]
-
-#     for i in range(len(polynomial_operators)):
-#         numerator.append(
-#             polynomial_operators[i] + str(polynomial_coefficients[i]))
-
-#     def division(numerator, denominator, number, i):
-#         global polynomial_coefficients
-#         numerator[i] += number * denominator
-#         i += 1
-
-#         if i > len(polynomial_coefficients):
-#             return(numerator)
-
-
-print("Welcome to Polynomial Equation Solver by:")
-print("""
-▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
-██░▄▄▀█▀▄▄▀█▀▄▄▀█░█▀█░███░█▀▄▄▀█░▄▄▀█░▄▀▄░████░▄▄▀██▄██▄░▄██
-██░▄▄▀█░██░█░██░█░▄▀█▄▀░▀▄█░██░█░▀▀▄█░█▄█░█▄▄█░▄▄▀██░▄██░███
-██░▀▀░██▄▄███▄▄██▄█▄██▄█▄███▄▄██▄█▄▄█▄███▄████▄▄▄▄█▄▄▄██▄███
-▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
-""")
-
-print(parse(list_input))
-
-print(factoring(polynomial_coefficients, polynomial_constant_factors, leading_coefficient_factors))
-
-print(plug_in_setup(list_input, PLUG_IN_LIST))
-
-possible_polynomial_roots = unflipped_roots(
-    leading_coefficient_factors,
-    unflipped_possible_roots, 
-    polynomial_constant_factors) + reciprocal_roots(
-    leading_coefficient_factors, 
-    possible_roots_reciprocal,
-    polynomial_constant_factors)
-
-print(possible_polynomial_roots)
-
-plug_in(possible_polynomial_roots, zeroes, PLUG_IN_LIST)
-
-zero_cleaner(zeroes, roots)
-
-print(roots)
-
-# print(synthetic_division(roots, polynomial_coefficients,
-#       polynomial_operators, polynomial_exponents))
+if __name__ == '__main__':
+    main()
